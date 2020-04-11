@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -23,6 +24,10 @@ android {
         }
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
 }
 
 dependencies {
@@ -34,4 +39,18 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    /** Dagger */
+
+    ext.dagger2_version = '2.27'
+    // Basic Dagger 2 (required)
+    implementation "com.google.dagger:dagger:$dagger2_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger2_version"
+
+    // dagger support package
+    implementation "com.google.dagger:dagger-android-support:$dagger2_version"
+
+    // dagger.android package (optional)
+    implementation "com.google.dagger:dagger-android:$dagger2_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger2_version"
 }
