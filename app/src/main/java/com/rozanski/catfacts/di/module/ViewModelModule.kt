@@ -3,7 +3,7 @@ package com.rozanski.catfacts.di.module
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.rozanski.catfacts.di.key.ViewModelKey
-import com.rozanski.catfacts.ui.main.MainViewModel
+import com.rozanski.catfacts.ui.main.SharedViewModel
 import com.rozanski.catfacts.utils.ViewModelFactory
 import dagger.Binds
 import dagger.Module
@@ -17,6 +17,6 @@ internal abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MainViewModel::class)
-    protected abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
+    @ViewModelKey(SharedViewModel::class)
+    protected abstract fun bindMainViewModel(sharedViewModel: SharedViewModel): ViewModel
 }
