@@ -2,16 +2,19 @@ package com.rozanski.catfacts.ui.main
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.rozanski.catfacts.R
 import com.rozanski.catfacts.network.ApiState
 import com.rozanski.catfacts.network.FactResponse.Fact
 import com.rozanski.catfacts.utils.subscribe
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_fact_list.*
 import javax.inject.Inject
 
@@ -21,6 +24,7 @@ class FactListFragment : Fragment(R.layout.fragment_fact_list), FactListAdapter.
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var viewModel: SharedViewModel
     lateinit var adapter: FactListAdapter
+    lateinit var refreshLayout: SwipeRefreshLayout
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -34,14 +38,38 @@ class FactListFragment : Fragment(R.layout.fragment_fact_list), FactListAdapter.
     }
 
     private fun setupUI() {
+        refreshLayout = layout_refresh
+        refreshLayout.setColorSchemeResources(R.color.colorAccent)
+        refreshLayout.setOnRefreshListener {
+            viewModel.refreshData()
+        }
         recyclerview_fact.layoutManager = LinearLayoutManager(context)
         adapter = FactListAdapter(emptyList(), viewModel.catIcons, this)
         recyclerview_fact.adapter = adapter
         viewModel.catFacts.subscribe(this, ::updateData)
+        viewModel.apiState.subscribe(this, ::handleApiStates)
     }
 
     private fun updateData(facts: List<Fact>) {
         adapter.updateData(facts, viewModel.catIcons)
+    }
+
+    private fun handleApiStates(apiState: ApiState) {
+        when (apiState) {
+            ApiState.IDLE -> refreshLayout.isRefreshing = false
+            ApiState.SUCCESS -> refreshLayout.isRefreshing = false
+            ApiState.LOADING -> {
+                Log.d("My", "Show loading")
+                refreshLayout.isRefreshing = true
+            }
+            ApiState.ERROR -> {
+                refreshLayout.isRefreshing = false
+                Toast.makeText(context, "Error: could not load data", Toast.LENGTH_SHORT).show()
+            }
+            ApiState.CANCELED -> {
+                refreshLayout.isRefreshing = false
+            }
+        }
     }
 
     override fun onClick(position: Int) {

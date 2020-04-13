@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
 
         if(isInPortraitMode())
             viewModel.currentFragment.subscribe(this, ::changeFragment)
-        viewModel.apiState.subscribe(this, ::handleApiState)
 
         if(!viewModel.iconsAreSet)  {
             val list = mutableListOf<Int>()
@@ -49,24 +48,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             viewModel.setIcons(list)
-        }
-    }
-
-    private fun handleApiState(apiState: ApiState) {
-        when (apiState) {
-            ApiState.IDLE -> progress.visibility = View.INVISIBLE
-            ApiState.SUCCESS -> progress.visibility = View.INVISIBLE
-            ApiState.LOADING -> {
-                Log.d("My", "Show loading")
-                progress.visibility = View.VISIBLE
-            }
-            ApiState.ERROR -> {
-                progress.visibility = View.INVISIBLE
-                Toast.makeText(this, "Error: could not load data", Toast.LENGTH_SHORT).show()
-            }
-            ApiState.CANCELED -> {
-                progress.visibility = View.INVISIBLE
-            }
         }
     }
 
