@@ -67,7 +67,7 @@ class FactListFragment : Fragment(R.layout.fragment_fact_list), FactListAdapter.
             ApiState.LOADING -> refreshLayout.isRefreshing = true
             ApiState.ERROR -> {
                 refreshLayout.isRefreshing = false
-                Toast.makeText(context, "Error: could not load data", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, resources.getString(R.string.loadingError), Toast.LENGTH_SHORT).show()
             }
         }
     }
