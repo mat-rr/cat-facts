@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Cat Facts</string>
+
+    <string name="refresh">Refresh</string>
+    <string name="loadingError">Error: could not load data</string>
+</resources>
