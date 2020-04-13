@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = resources.getString(R.string.app_name)
 
-        viewModel.current.subscribe(this, ::changeFragment)
+        viewModel.currentFragment.subscribe(this, ::changeFragment)
 
         fragment_container.setOnClickListener {
             viewModel.changeFragment()
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(viewModel.current.value == SharedViewModel.FRAG_LIST) {
+        if(viewModel.currentFragment.value == SharedViewModel.FRAG_LIST) {
             super.onBackPressed()
         }
         else {

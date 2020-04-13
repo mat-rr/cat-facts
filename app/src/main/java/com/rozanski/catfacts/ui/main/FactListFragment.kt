@@ -35,7 +35,6 @@ class FactListFragment : Fragment(R.layout.fragment_fact_list), FactListAdapter.
     }
 
     override fun onClick(position: Int) {
-        Toast.makeText(context, position.toString(), Toast.LENGTH_SHORT).show()
         viewModel.setClicked(position)
         viewModel.changeFragment()
     }

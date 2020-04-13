@@ -13,23 +13,25 @@ class SharedViewModel @Inject constructor() : ViewModel() {
     }
 
     private var _catFacts = MutableLiveData<List<Int>>()
-    private var _current = MutableLiveData<String>()
-    private var _clicked = MutableLiveData<Int>()
+    private var _currentFragment = MutableLiveData<String>()
+    //private var _clicked = MutableLiveData<Int>()
+    private var _curr = MutableLiveData<Int?>()
 
     val catFacts: LiveData<List<Int>> get() = _catFacts
-    val current: LiveData<String> get() = _current
-    val clicked: LiveData<Int> get() = _clicked
+    val currentFragment: LiveData<String> get() = _currentFragment
+    val curr: LiveData<Int?> get() = _curr
 
     init {
-        _current.value = FRAG_LIST
+        _currentFragment.value = FRAG_LIST
 
         // insert dummy data
         val list = listOf<Int>(1, 2, 3, 4)
+        _curr.value = null
         _catFacts.value = list
     }
 
     fun changeFragment() {
-        _current.value = if (current.value == FRAG_LIST) {
+        _currentFragment.value = if (currentFragment.value == FRAG_LIST) {
             FRAG_DETAILS
         } else {
             FRAG_LIST
@@ -37,6 +39,6 @@ class SharedViewModel @Inject constructor() : ViewModel() {
     }
 
     fun setClicked(position: Int) {
-        _clicked.value = position
+        _curr.value = _catFacts.value?.get(position)
     }
 }
