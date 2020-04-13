@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         val id = item.itemId
 
         if (id == R.id.action_refresh) {
-            // TODO refresh
+            viewModel.refreshData()
             return true
         }
 
