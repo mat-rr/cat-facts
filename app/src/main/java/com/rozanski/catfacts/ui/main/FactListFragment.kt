@@ -35,13 +35,13 @@ class FactListFragment : Fragment(R.layout.fragment_fact_list), FactListAdapter.
 
     private fun setupUI() {
         recyclerview_fact.layoutManager = LinearLayoutManager(context)
-        adapter = FactListAdapter(emptyList(), this)
+        adapter = FactListAdapter(emptyList(), viewModel.catIcons, this)
         recyclerview_fact.adapter = adapter
         viewModel.catFacts.subscribe(this, ::updateData)
     }
 
     private fun updateData(facts: List<Fact>) {
-        adapter.updateData(facts)
+        adapter.updateData(facts, viewModel.catIcons)
     }
 
     override fun onClick(position: Int) {

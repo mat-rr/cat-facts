@@ -37,6 +37,17 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.currentFragment.subscribe(this, ::changeFragment)
         viewModel.apiState.subscribe(this, ::handleApiState)
+
+        if(!viewModel.iconsAreSet)  {
+            val list = mutableListOf<Int>()
+            for(i in 1..30) {
+                val id = resources.getIdentifier("c$i", "drawable", this.packageName)
+                if(id != 0) {
+                    list.add(id)
+                }
+            }
+            viewModel.setIcons(list)
+        }
     }
 
     private fun handleApiState(apiState: ApiState) {
