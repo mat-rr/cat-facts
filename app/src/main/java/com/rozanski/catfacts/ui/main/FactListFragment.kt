@@ -2,7 +2,6 @@ package com.rozanski.catfacts.ui.main
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -14,7 +13,6 @@ import com.rozanski.catfacts.network.ApiState
 import com.rozanski.catfacts.network.FactResponse.Fact
 import com.rozanski.catfacts.utils.subscribe
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_fact_list.*
 import javax.inject.Inject
 
@@ -32,7 +30,10 @@ class FactListFragment : Fragment(R.layout.fragment_fact_list), FactListAdapter.
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(activity!!.viewModelStore, viewModelFactory)[SharedViewModel::class.java]
+        viewModel = ViewModelProvider(
+            activity!!.viewModelStore,
+            viewModelFactory
+        )[SharedViewModel::class.java]
         setupUI()
         super.onViewCreated(view, savedInstanceState)
     }
@@ -56,24 +57,17 @@ class FactListFragment : Fragment(R.layout.fragment_fact_list), FactListAdapter.
 
     private fun handleApiStates(apiState: ApiState) {
         when (apiState) {
-            ApiState.IDLE -> refreshLayout.isRefreshing = false
-            ApiState.SUCCESS -> refreshLayout.isRefreshing = false
-            ApiState.LOADING -> {
-                Log.d("My", "Show loading")
-                refreshLayout.isRefreshing = true
-            }
+            ApiState.IDLE, ApiState.SUCCESS, ApiState.CANCELED -> refreshLayout.isRefreshing = false
+            ApiState.LOADING -> refreshLayout.isRefreshing = true
             ApiState.ERROR -> {
                 refreshLayout.isRefreshing = false
                 Toast.makeText(context, "Error: could not load data", Toast.LENGTH_SHORT).show()
-            }
-            ApiState.CANCELED -> {
-                refreshLayout.isRefreshing = false
             }
         }
     }
 
     override fun onClick(position: Int) {
-        if(viewModel.apiState.value != ApiState.LOADING) {
+        if (viewModel.apiState.value != ApiState.LOADING) {
             viewModel.setClicked(position)
             viewModel.changeFragment()
         }

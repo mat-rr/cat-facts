@@ -6,13 +6,10 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.rozanski.catfacts.R
-import com.rozanski.catfacts.network.FactResponse.Fact
 import com.rozanski.catfacts.utils.subscribe
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_fact_details.*
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class FactDetailsFragment : Fragment(R.layout.fragment_fact_details) {
@@ -36,15 +33,15 @@ class FactDetailsFragment : Fragment(R.layout.fragment_fact_details) {
     }
 
     private fun setupUI() {
-        viewModel.currentFact.subscribe(this, ::updateData)
+        viewModel.selected.subscribe(this, ::updateData)
     }
 
-    private fun updateData(fact: Fact?) {
-        if (fact == null) {
+    private fun updateData(position: Int) {
+        if (position == -1) {
             textView_content.text = ""
             textView_date.text = ""
         } else {
-            textView_content.text = fact.text
+            textView_content.text = viewModel.currentFact.value?.text
             textView_date.text = SimpleDateFormat().format(viewModel.updateDate)
         }
     }

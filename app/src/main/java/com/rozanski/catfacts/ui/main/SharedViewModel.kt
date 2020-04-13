@@ -4,14 +4,12 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.rozanski.catfacts.R
 import com.rozanski.catfacts.network.ApiState
 import com.rozanski.catfacts.network.FactResponse.Fact
 import com.rozanski.catfacts.network.FactService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.sql.Time
 import java.util.*
 import javax.inject.Inject
 
@@ -31,6 +29,7 @@ class SharedViewModel @Inject constructor(
     private var _catIcons = emptyList<Int>()
     private var _iconsAreSet = false
     private var _updateDate: Date = Calendar.getInstance().time
+    private var _selected = MutableLiveData<Int>()
 
     val catFacts: LiveData<List<Fact>> get() = _catFacts
     val currentFragment: LiveData<String> get() = _currentFragment
@@ -39,13 +38,14 @@ class SharedViewModel @Inject constructor(
     val catIcons: List<Int> get() = _catIcons
     val iconsAreSet: Boolean get() = _iconsAreSet
     val updateDate: Date get() = _updateDate
+    val selected: LiveData<Int> get() = _selected
 
     init {
         _currentFragment.value = FRAG_LIST
         _apiState.value = ApiState.IDLE
         _currentFact.value = null
         _catFacts.value = emptyList()
-
+        _selected.value = -1
     }
 
     fun changeFragment() {
@@ -58,6 +58,7 @@ class SharedViewModel @Inject constructor(
 
     fun setClicked(position: Int) {
         _currentFact.value = _catFacts.value?.get(position)
+        _selected.value = position
     }
 
     fun refreshData() {
@@ -81,7 +82,8 @@ class SharedViewModel @Inject constructor(
                 _catFacts.value = random30Facts
                 _updateDate = Calendar.getInstance().time
                 _apiState.value = ApiState.SUCCESS
-                _currentFact.value = null
+                _selected.value = -1
+                _currentFragment.value = FRAG_LIST
             }, {
                 Log.d("My", it.toString())
                 _apiState.value = ApiState.ERROR

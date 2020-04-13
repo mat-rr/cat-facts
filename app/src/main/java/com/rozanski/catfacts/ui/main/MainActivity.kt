@@ -5,12 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.rozanski.catfacts.R
-import com.rozanski.catfacts.network.ApiState
 import com.rozanski.catfacts.utils.subscribe
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,14 +33,14 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = resources.getString(R.string.app_name)
 
-        if(isInPortraitMode())
+        if (isInPortraitMode())
             viewModel.currentFragment.subscribe(this, ::changeFragment)
 
-        if(!viewModel.iconsAreSet)  {
+        if (!viewModel.iconsAreSet) {
             val list = mutableListOf<Int>()
-            for(i in 1..30) {
+            for (i in 1..30) {
                 val id = resources.getIdentifier("c$i", "drawable", this.packageName)
-                if(id != 0) {
+                if (id != 0) {
                     list.add(id)
                 }
             }
@@ -53,54 +50,57 @@ class MainActivity : AppCompatActivity() {
 
     private fun changeFragment(tag: String) {
         when (tag) {
-            SharedViewModel.FRAG_DETAILS -> {
-                if (supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_DETAILS) != null) {
-                    supportFragmentManager.beginTransaction()
-                        .show(supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_DETAILS)!!)
-                        .commit()
-                } else {
-                    supportFragmentManager.beginTransaction().add(
-                        R.id.fragment_container,
-                        FactDetailsFragment(),
-                        SharedViewModel.FRAG_DETAILS
-                    ).commit()
-                }
-
-                if (supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_LIST) != null) {
-                    supportFragmentManager.beginTransaction()
-                        .hide(supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_LIST)!!)
-                        .commit()
-                }
-
-                menu?.findItem(R.id.action_refresh)?.isVisible = false
-                supportActionBar?.setDisplayHomeAsUpEnabled(true)
-                supportActionBar?.setDisplayShowHomeEnabled(true)
-            }
-
-            SharedViewModel.FRAG_LIST -> {
-                if (supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_LIST) != null) {
-                    supportFragmentManager.beginTransaction()
-                        .show(supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_LIST)!!)
-                        .commit()
-                } else {
-                    supportFragmentManager.beginTransaction().add(
-                        R.id.fragment_container,
-                        FactListFragment(),
-                        SharedViewModel.FRAG_LIST
-                    ).commit()
-                }
-
-                if (supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_DETAILS) != null) {
-                    supportFragmentManager.beginTransaction()
-                        .hide(supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_DETAILS)!!)
-                        .commit()
-                }
-
-                menu?.findItem(R.id.action_refresh)?.isVisible = true
-                supportActionBar?.setDisplayHomeAsUpEnabled(false)
-                supportActionBar?.setDisplayShowHomeEnabled(false)
-            }
+            SharedViewModel.FRAG_DETAILS -> loadDetailsFragment()
+            SharedViewModel.FRAG_LIST -> loadListFragment()
         }
+    }
+
+    private fun loadListFragment() {
+        if (supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_LIST) != null) {
+            supportFragmentManager.beginTransaction()
+                .show(supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_LIST)!!)
+                .commit()
+        } else {
+            supportFragmentManager.beginTransaction().add(
+                R.id.fragment_container,
+                FactListFragment(),
+                SharedViewModel.FRAG_LIST
+            ).commit()
+        }
+
+        if (supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_DETAILS) != null) {
+            supportFragmentManager.beginTransaction()
+                .hide(supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_DETAILS)!!)
+                .commit()
+        }
+
+        menu?.findItem(R.id.action_refresh)?.isVisible = true
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setDisplayShowHomeEnabled(false)
+    }
+
+    private fun loadDetailsFragment() {
+        if (supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_DETAILS) != null) {
+            supportFragmentManager.beginTransaction()
+                .show(supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_DETAILS)!!)
+                .commit()
+        } else {
+            supportFragmentManager.beginTransaction().add(
+                R.id.fragment_container,
+                FactDetailsFragment(),
+                SharedViewModel.FRAG_DETAILS
+            ).commit()
+        }
+
+        if (supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_LIST) != null) {
+            supportFragmentManager.beginTransaction()
+                .hide(supportFragmentManager.findFragmentByTag(SharedViewModel.FRAG_LIST)!!)
+                .commit()
+        }
+
+        menu?.findItem(R.id.action_refresh)?.isVisible = false
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     override fun onSupportNavigateUp(): Boolean {

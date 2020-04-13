@@ -28,7 +28,8 @@ class FactListAdapter(
 
         fun bind(fact: Fact) {
             factId.text = fact._id
-            Picasso.get().load(icons[adapterPosition]).transform(CropCircleTransformation()).into(icon)
+            Picasso.get().load(icons[adapterPosition]).transform(CropCircleTransformation())
+                .into(icon)
         }
     }
 
