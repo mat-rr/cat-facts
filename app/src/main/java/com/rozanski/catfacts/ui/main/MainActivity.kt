@@ -1,5 +1,6 @@
 package com.rozanski.catfacts.ui.main
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -35,7 +36,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = resources.getString(R.string.app_name)
 
-        viewModel.currentFragment.subscribe(this, ::changeFragment)
+        if(isInPortraitMode())
+            viewModel.currentFragment.subscribe(this, ::changeFragment)
         viewModel.apiState.subscribe(this, ::handleApiState)
 
         if(!viewModel.iconsAreSet)  {
@@ -148,5 +150,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         return false
+    }
+
+    private fun isInPortraitMode(): Boolean {
+        return resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     }
 }

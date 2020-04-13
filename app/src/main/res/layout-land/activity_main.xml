@@ -18,18 +18,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:theme="@style/ToolbarColoredBackArrow"
-        app:titleTextColor="@color/textColor" />
+        app:titleTextColor="@color/black" />
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <fragment
+        android:id="@+id/fragment_list"
+        android:name="com.rozanski.catfacts.ui.main.FactListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    </FrameLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <fragment
+        android:id="@+id/fragment_details"
+        android:name="com.rozanski.catfacts.ui.main.FactDetailsFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <LinearLayout
         android:id="@+id/progress"
@@ -50,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="visible" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

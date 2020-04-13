@@ -81,6 +81,7 @@ class SharedViewModel @Inject constructor(
                 _catFacts.value = random30Facts
                 _updateDate = Calendar.getInstance().time
                 _apiState.value = ApiState.SUCCESS
+                _currentFact.value = null
             }, {
                 Log.d("My", it.toString())
                 _apiState.value = ApiState.ERROR
