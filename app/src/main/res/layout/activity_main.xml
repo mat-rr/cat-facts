@@ -12,12 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:elevation="4dp"
         android:minHeight="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:theme="@style/ToolbarWhiteBackArrow"
-        app:titleTextColor="@color/white" />
+        app:theme="@style/ToolbarColoredBackArrow"
+        app:titleTextColor="@color/black" />
 
     <FrameLayout
         android:id="@+id/fragment_container"

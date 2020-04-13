@@ -10,6 +10,8 @@ import com.rozanski.catfacts.network.FactResponse.Fact
 import com.rozanski.catfacts.utils.subscribe
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_fact_details.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -42,10 +44,8 @@ class FactDetailsFragment : Fragment(R.layout.fragment_fact_details) {
             textView_content.text = ""
             textView_date.text = ""
         } else {
-            val content = fact.text
-            val date = Calendar.getInstance().time.toString()
-            textView_content.text = content
-            textView_date.text = date
+            textView_content.text = fact.text
+            textView_date.text = SimpleDateFormat().format(viewModel.updateDate)
         }
     }
 }

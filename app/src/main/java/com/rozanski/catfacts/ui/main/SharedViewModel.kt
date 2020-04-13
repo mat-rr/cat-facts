@@ -11,6 +11,8 @@ import com.rozanski.catfacts.network.FactService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.sql.Time
+import java.util.*
 import javax.inject.Inject
 
 class SharedViewModel @Inject constructor(
@@ -28,6 +30,7 @@ class SharedViewModel @Inject constructor(
     private val _apiState = MutableLiveData<ApiState>()
     private var _catIcons = emptyList<Int>()
     private var _iconsAreSet = false
+    private var _updateDate: Date = Calendar.getInstance().time
 
     val catFacts: LiveData<List<Fact>> get() = _catFacts
     val currentFragment: LiveData<String> get() = _currentFragment
@@ -35,6 +38,7 @@ class SharedViewModel @Inject constructor(
     val apiState: LiveData<ApiState> get() = _apiState
     val catIcons: List<Int> get() = _catIcons
     val iconsAreSet: Boolean get() = _iconsAreSet
+    val updateDate: Date get() = _updateDate
 
     init {
         _currentFragment.value = FRAG_LIST
@@ -75,6 +79,7 @@ class SharedViewModel @Inject constructor(
                 val random30Facts = it.all.shuffled().take(30)
                 _catIcons = _catIcons.shuffled()
                 _catFacts.value = random30Facts
+                _updateDate = Calendar.getInstance().time
                 _apiState.value = ApiState.SUCCESS
             }, {
                 Log.d("My", it.toString())
