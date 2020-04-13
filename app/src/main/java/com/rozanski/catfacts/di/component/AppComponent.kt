@@ -3,6 +3,7 @@ package com.rozanski.catfacts.di.component
 import android.app.Application
 import com.rozanski.catfacts.App
 import com.rozanski.catfacts.di.module.ActivityModule
+import com.rozanski.catfacts.di.module.FragmentModule
 import com.rozanski.catfacts.di.module.ViewModelModule
 import dagger.BindsInstance
 import dagger.Component
@@ -12,6 +13,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         ActivityModule::class,
+        FragmentModule::class,
         AndroidInjectionModule::class,
         ViewModelModule::class]
 )
