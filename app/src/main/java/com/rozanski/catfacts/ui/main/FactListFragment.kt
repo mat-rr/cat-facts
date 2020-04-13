@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rozanski.catfacts.R
+import com.rozanski.catfacts.network.ApiState
 import com.rozanski.catfacts.network.FactResponse.Fact
 import com.rozanski.catfacts.utils.subscribe
 import dagger.android.support.AndroidSupportInjection
@@ -44,7 +45,9 @@ class FactListFragment : Fragment(R.layout.fragment_fact_list), FactListAdapter.
     }
 
     override fun onClick(position: Int) {
-        viewModel.setClicked(position)
-        viewModel.changeFragment()
+        if(viewModel.apiState.value != ApiState.LOADING) {
+            viewModel.setClicked(position)
+            viewModel.changeFragment()
+        }
     }
 }

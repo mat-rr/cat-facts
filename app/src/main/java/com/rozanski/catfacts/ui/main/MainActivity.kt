@@ -1,11 +1,15 @@
 package com.rozanski.catfacts.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.rozanski.catfacts.R
+import com.rozanski.catfacts.network.ApiState
 import com.rozanski.catfacts.utils.subscribe
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
@@ -32,9 +36,24 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = resources.getString(R.string.app_name)
 
         viewModel.currentFragment.subscribe(this, ::changeFragment)
+        viewModel.apiState.subscribe(this, ::handleApiState)
+    }
 
-        fragment_container.setOnClickListener {
-            viewModel.changeFragment()
+    private fun handleApiState(apiState: ApiState) {
+        when (apiState) {
+            ApiState.IDLE -> progress.visibility = View.INVISIBLE
+            ApiState.SUCCESS -> progress.visibility = View.INVISIBLE
+            ApiState.LOADING -> {
+                Log.d("My", "Show loading")
+                progress.visibility = View.VISIBLE
+            }
+            ApiState.ERROR -> {
+                progress.visibility = View.INVISIBLE
+                Toast.makeText(this, "Error: could not load data", Toast.LENGTH_SHORT).show()
+            }
+            ApiState.CANCELED -> {
+                progress.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -96,23 +115,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if(viewModel.currentFragment.value == SharedViewModel.FRAG_LIST) {
+        if (viewModel.currentFragment.value == SharedViewModel.FRAG_LIST) {
             super.onBackPressed()
-        }
-        else {
+        } else {
             viewModel.changeFragment()
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar_list_active, menu)
+        menuInflater.inflate(R.menu.menu_toolbar_list, menu)
         this.menu = menu
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-
+        Log.d("My", "clicked")
         if (id == R.id.action_refresh) {
             viewModel.refreshData()
             return true
