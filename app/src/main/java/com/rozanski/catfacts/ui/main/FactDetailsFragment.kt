@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.rozanski.catfacts.R
+import com.rozanski.catfacts.network.FactResponse.Fact
 import com.rozanski.catfacts.utils.subscribe
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.fragment_fact_details.*
@@ -33,15 +34,15 @@ class FactDetailsFragment : Fragment(R.layout.fragment_fact_details) {
     }
 
     private fun setupUI() {
-        viewModel.curr.subscribe(this, ::updateData)
+        viewModel.currentFact.subscribe(this, ::updateData)
     }
 
-    private fun updateData(fact: Int?) {
+    private fun updateData(fact: Fact?) {
         if (fact == null) {
             textView_content.text = ""
             textView_date.text = ""
         } else {
-            val content = "Clicked: $fact"
+            val content = fact.text
             val date = Calendar.getInstance().time.toString()
             textView_content.text = content
             textView_date.text = date

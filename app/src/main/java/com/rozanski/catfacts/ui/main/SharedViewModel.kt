@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.rozanski.catfacts.network.FactResponse.FactResponse
+import com.rozanski.catfacts.network.FactResponse.Fact
 import com.rozanski.catfacts.network.FactService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -20,21 +20,19 @@ class SharedViewModel @Inject constructor(
     }
 
     private var disposable: Disposable? = null
-    private var _catFacts = MutableLiveData<List<Int>>()
+    private var _catFacts = MutableLiveData<List<Fact>>()
     private var _currentFragment = MutableLiveData<String>()
-    private var _curr = MutableLiveData<Int?>()
+    private var _currentFact = MutableLiveData<Fact?>()
 
-    val catFacts: LiveData<List<Int>> get() = _catFacts
+    val catFacts: LiveData<List<Fact>> get() = _catFacts
     val currentFragment: LiveData<String> get() = _currentFragment
-    val curr: LiveData<Int?> get() = _curr
+    val currentFact: LiveData<Fact?> get() = _currentFact
 
     init {
         _currentFragment.value = FRAG_LIST
 
-        // insert dummy data
-        val list = listOf<Int>(1, 2, 3, 4)
-        _curr.value = null
-        _catFacts.value = list
+        _currentFact.value = null
+        _catFacts.value = emptyList()
     }
 
     fun changeFragment() {
@@ -46,7 +44,7 @@ class SharedViewModel @Inject constructor(
     }
 
     fun setClicked(position: Int) {
-        _curr.value = _catFacts.value?.get(position)
+        _currentFact.value = _catFacts.value?.get(position)
     }
 
     fun refreshData() {
@@ -63,6 +61,8 @@ class SharedViewModel @Inject constructor(
             }
             .subscribe({
                 Log.d("My", it.toString())
+                val random30Facts = it.all.shuffled().take(30)
+                _catFacts.value = random30Facts
             }, {
                 Log.d("My", it.toString())
             })

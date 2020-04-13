@@ -1,6 +1,6 @@
 package com.rozanski.catfacts.network.FactResponse
 
-data class All(
+data class Fact(
     val _id: String,
     val text: String,
     val type: String,

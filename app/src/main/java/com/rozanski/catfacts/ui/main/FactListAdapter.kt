@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.rozanski.catfacts.R
+import com.rozanski.catfacts.network.FactResponse.Fact
 import kotlinx.android.synthetic.main.recyclerview_adapter_fact.view.*
 
 class FactListAdapter(
-    private val facts: List<Int>,
+    private var facts: List<Fact>,
     private val listener: ClickListener
 ) : RecyclerView.Adapter<FactListAdapter.FactListViewHolder>() {
 
@@ -20,8 +21,8 @@ class FactListAdapter(
     inner class FactListViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         private val factId: TextView = v.textView_factID
 
-        fun bind(id: Int) {
-            factId.text = id.toString()
+        fun bind(fact: Fact) {
+            factId.text = fact._id
         }
     }
 
@@ -40,5 +41,10 @@ class FactListAdapter(
 
     override fun onBindViewHolder(holder: FactListViewHolder, position: Int) {
         holder.bind(facts[position])
+    }
+
+    fun updateData(facts: List<Fact>) {
+        this.facts = facts
+        notifyDataSetChanged()
     }
 }
