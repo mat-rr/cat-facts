@@ -112,7 +112,8 @@ class MainActivity : AppCompatActivity() {
         if (viewModel.currentFragment.value == SharedViewModel.FRAG_LIST) {
             super.onBackPressed()
         } else {
-            viewModel.changeFragment()
+            if (isInPortraitMode())
+                viewModel.changeFragment()
         }
     }
 

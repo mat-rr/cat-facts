@@ -1,6 +1,7 @@
 package com.rozanski.catfacts.ui.main
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -49,10 +50,15 @@ class FactListFragment : Fragment(R.layout.fragment_fact_list), FactListAdapter.
         recyclerview_fact.adapter = adapter
         viewModel.catFacts.subscribe(this, ::updateData)
         viewModel.apiState.subscribe(this, ::handleApiStates)
+        viewModel.selected.subscribe(this, ::updateSelected)
     }
 
     private fun updateData(facts: List<Fact>) {
         adapter.updateData(facts, viewModel.catIcons)
+    }
+
+    private fun updateSelected(selected: Int) {
+        adapter.updateSelected(selected)
     }
 
     private fun handleApiStates(apiState: ApiState) {
@@ -69,7 +75,12 @@ class FactListFragment : Fragment(R.layout.fragment_fact_list), FactListAdapter.
     override fun onClick(position: Int) {
         if (viewModel.apiState.value != ApiState.LOADING) {
             viewModel.setClicked(position)
-            viewModel.changeFragment()
+            if (isInPortraitMode())
+                viewModel.changeFragment()
         }
+    }
+
+    private fun isInPortraitMode(): Boolean {
+        return resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     }
 }

@@ -57,8 +57,8 @@ class SharedViewModel @Inject constructor(
     }
 
     fun setClicked(position: Int) {
-        _currentFact.value = _catFacts.value?.get(position)
         _selected.value = position
+        _currentFact.value = _catFacts.value?.get(position)
     }
 
     fun refreshData() {
@@ -79,11 +79,11 @@ class SharedViewModel @Inject constructor(
                 Log.d("My", it.toString())
                 val random30Facts = it.all.shuffled().take(30)
                 _catIcons = _catIcons.shuffled()
-                _catFacts.value = random30Facts
                 _updateDate = Calendar.getInstance().time
-                _apiState.value = ApiState.SUCCESS
                 _selected.value = -1
                 _currentFragment.value = FRAG_LIST
+                _apiState.value = ApiState.SUCCESS
+                _catFacts.value = random30Facts
             }, {
                 Log.d("My", it.toString())
                 _apiState.value = ApiState.ERROR
